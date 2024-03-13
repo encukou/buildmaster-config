@@ -257,6 +257,8 @@ UNSTABLE_BUILDERS_TIER_2 = [
     ("aarch64 CentOS9 LTO", "cstratak-CentOS9-aarch64", LTONonDebugUnixBuild),
     ("aarch64 CentOS9 LTO + PGO", "cstratak-CentOS9-aarch64", LTOPGONonDebugBuild),
 
+    ("aarch64 Raspbian", "encukou-rpi5", UnixBuild),
+
     # WebAssembly
     ("wasm32 WASI 8Core", "kushaldas-wasi", Wasm32WasiCrossBuild),
 ]

@@ -194,6 +194,11 @@ def get_workers(settings):
             parallel_tests=6,
         ),
         cpw(
+            name="encukou-rpi5",
+            tags=['linux', 'unix', 'raspbian', 'aarch64', 'arm', 'armv8'],
+            parallel_tests=4,
+        ),
+        cpw(
             name="gps-clang-ubsan",
             tags=['linux', 'unix', 'amd64', 'x86-64'],
         ),
