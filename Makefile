@@ -77,4 +77,4 @@ git-update-requirements:
 	git pull
 	git switch -c reqs main
 	make regen-requirements
-	git ci -a -m "run make regen-requirements"
+	git commit -a -m "run make regen-requirements"
