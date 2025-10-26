@@ -59,8 +59,21 @@ def get_workers(settings):
         return [cpw(name="local-worker")]
     return [
         cpw(
+            name="ambv-bb-win11",
+            tags=['windows', 'win11', 'amd64', 'x86-64', 'bigmem'],
+            not_branches=['3.10', '3.11', '3.12', '3.13'],
+            parallel_tests=4,
+        ),
+        cpw(
             name="angelico-debian-amd64",
             tags=['linux', 'unix', 'debian', 'amd64', 'x86-64'],
+        ),
+        cpw(
+            name="bcannon-wasi",
+            tags=['wasm', 'wasi'],
+            not_branches=['3.10'],
+            parallel_tests=2,
+            parallel_builders=2,
         ),
         cpw(
             name="billenstein-macos",
@@ -152,12 +165,6 @@ def get_workers(settings):
             parallel_tests=40,
         ),
         cpw(
-            name="diegorusso-aarch64-bigmem",
-            tags=['linux', 'unix', 'ubuntu', 'arm', 'arm64', 'aarch64', 'bigmem'],
-            not_branches=['3.10', '3.11', '3.12', '3.13', '3.14'],
-            parallel_tests=8,
-        ),
-        cpw(
             name="cstratak-fedora-rawhide-s390x",
             tags=['linux', 'unix', 'fedora', 's390x'],
             parallel_tests=10,
@@ -179,6 +186,12 @@ def get_workers(settings):
             parallel_tests=10,
         ),
         cpw(
+            name="diegorusso-aarch64-bigmem",
+            tags=['linux', 'unix', 'ubuntu', 'arm', 'arm64', 'aarch64', 'bigmem'],
+            not_branches=['3.10', '3.11', '3.12', '3.13', '3.14'],
+            parallel_tests=8,
+        ),
+        cpw(
             name="edelsohn-aix-ppc64",
             tags=['aix', 'unix', 'ppc64'],
             parallel_tests=10,
@@ -190,25 +203,75 @@ def get_workers(settings):
             parallel_tests=4,
         ),
         cpw(
-            name="stan-raspbian",
-            tags=['linux', 'unix', 'raspbian', 'debian', 'armv8',
-                  'aarch64', 'arm'],
-            parallel_tests=4,
-            # Tests fail with latin1 encoding on 3.12, probably earlier
-            not_branches=['3.12', '3.11', '3.10'],
-            # Problematic ISP causes issues connecting to testpython.net
-            exclude_test_resources=['urlfetch', 'network'],
+            name="itamaro-centos-aws",
+            tags=['linux', 'unix', 'rhel', 'amd64', 'x86-64'],
+            not_branches=['3.10', '3.11', '3.12'],
+            parallel_tests=10,
+            parallel_builders=2,
         ),
         cpw(
-            name="savannah-raspbian",
-            tags=['linux', 'unix', 'raspbian', 'debian', 'armv8',
-                  'aarch64', 'arm'],
-            parallel_tests=4,
+            name="itamaro-macos-arm64-aws",
+            tags=['macOS', 'unix', 'arm', 'arm64'],
+            not_branches=['3.10', '3.11', '3.12'],
+            parallel_tests=10,
+        ),
+        cpw(
+            name="itamaro-macos-intel-aws",
+            tags=['macOS', 'unix', 'amd64', 'x86-64'],
+            not_branches=['3.10', '3.11', '3.12'],
+            parallel_tests=10,
+        ),
+        cpw(
+            name="itamaro-win64-srv-22-aws",
+            tags=['windows', 'win-srv-22', 'amd64', 'x86-64'],
+            not_branches=['3.10', '3.11', '3.12'],
+            parallel_tests=10,
+            parallel_builders=2,
         ),
         cpw(
             name="kulikjak-solaris-sparcv9",
             tags=['solaris', 'unix', 'sparc', 'sparcv9'],
             parallel_tests=16,
+        ),
+        cpw(
+            name="kushaldas-wasi",
+            tags=['wasm', 'wasi'],
+            not_branches=['3.10'],
+            parallel_tests=4,
+            parallel_builders=2,
+        ),
+        cpw(
+            name="linaro-win-arm64",
+            tags=['windows', 'arm64'],
+            parallel_tests=4,
+        ),
+        cpw(
+            name="mhsmith-android-aarch64",
+            tags=['android'],
+            not_branches=['3.10', '3.11', '3.12'],
+            parallel_builders=1,  # All builds use the same emulator and app ID.
+        ),
+        cpw(
+            name="mhsmith-android-x86_64",
+            tags=['android'],
+            not_branches=['3.10', '3.11', '3.12'],
+            parallel_builders=1,  # All builds use the same emulator and app ID.
+        ),
+        cpw(
+            name="onder-riscv64",
+            tags=['linux', 'unix', 'ubuntu', 'riscv64'],
+            not_branches=['3.10'],
+            parallel_tests=4,
+        ),
+        cpw(
+            name="opsec-fbsd14",
+            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
+            parallel_tests=4,
+        ),
+        cpw(
+            name="opsec-fbsd15",
+            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
+            parallel_tests=4,
         ),
         cpw(
             name="pablogsal-arch-x86_64",
@@ -227,97 +290,6 @@ def get_workers(settings):
             exclude_test_resources=['urlfetch', 'network'],
         ),
         cpw(
-            name="skumaran-ubuntu-x86_64",
-            tags=['linux', 'unix', 'ubuntu', 'amd64', 'x86-64'],
-        ),
-        cpw(
-            name="ware-alpine",
-            tags=['linux', 'unix', 'alpine', 'docker', 'amd64', 'x86-64', 'musl'],
-            not_branches=['3.10', '3.11', '3.12', '3.13'],
-        ),
-        cpw(
-            name="ware-freebsd",
-            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
-            parallel_tests=4,
-        ),
-        cpw(
-            name="opsec-fbsd14",
-            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
-            parallel_tests=4,
-        ),
-        cpw(
-            name="opsec-fbsd15",
-            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
-            parallel_tests=4,
-        ),
-        cpw(
-            name="ware-debian-x86",
-            tags=['linux', 'unix', 'debian', 'x86'],
-            parallel_tests=4,
-        ),
-        cpw(
-            name="ware-win11",
-            tags=['windows', 'win11', 'amd64', 'x86-64'],
-            parallel_tests=2,
-        ),
-        cpw(
-            name="linaro-win-arm64",
-            tags=['windows', 'arm64'],
-            parallel_tests=4,
-        ),
-        cpw(
-            name="bcannon-wasi",
-            tags=['wasm', 'wasi'],
-            not_branches=['3.10'],
-            parallel_tests=2,
-            parallel_builders=2,
-        ),
-        cpw(
-            name="ambv-bb-win11",
-            tags=['windows', 'win11', 'amd64', 'x86-64', 'bigmem'],
-            not_branches=['3.10', '3.11', '3.12', '3.13'],
-            parallel_tests=4,
-        ),
-        cpw(
-            name="itamaro-centos-aws",
-            tags=['linux', 'unix', 'rhel', 'amd64', 'x86-64'],
-            not_branches=['3.10', '3.11', '3.12'],
-            parallel_tests=10,
-            parallel_builders=2,
-        ),
-        cpw(
-            name="itamaro-win64-srv-22-aws",
-            tags=['windows', 'win-srv-22', 'amd64', 'x86-64'],
-            not_branches=['3.10', '3.11', '3.12'],
-            parallel_tests=10,
-            parallel_builders=2,
-        ),
-        cpw(
-            name="itamaro-macos-intel-aws",
-            tags=['macOS', 'unix', 'amd64', 'x86-64'],
-            not_branches=['3.10', '3.11', '3.12'],
-            parallel_tests=10,
-        ),
-        cpw(
-            name="itamaro-macos-arm64-aws",
-            tags=['macOS', 'unix', 'arm', 'arm64'],
-            not_branches=['3.10', '3.11', '3.12'],
-            parallel_tests=10,
-        ),
-        cpw(
-            name="kushaldas-wasi",
-            tags=['wasm', 'wasi'],
-            not_branches=['3.10'],
-            parallel_tests=4,
-            parallel_builders=2,
-        ),
-        cpw(
-            name="onder-riscv64",
-            tags=['linux', 'unix', 'ubuntu', 'riscv64'],
-            not_branches=['3.10'],
-            parallel_tests=4,
-        ),
-        cpw(
             name="rkm-arm64-ios-simulator",
             tags=['iOS'],
             not_branches=['3.10', '3.11', '3.12'],
@@ -330,15 +302,43 @@ def get_workers(settings):
             parallel_builders=4,
         ),
         cpw(
-            name="mhsmith-android-aarch64",
-            tags=['android'],
-            not_branches=['3.10', '3.11', '3.12'],
-            parallel_builders=1,  # All builds use the same emulator and app ID.
+            name="savannah-raspbian",
+            tags=['linux', 'unix', 'raspbian', 'debian', 'armv8',
+                  'aarch64', 'arm'],
+            parallel_tests=4,
         ),
         cpw(
-            name="mhsmith-android-x86_64",
-            tags=['android'],
-            not_branches=['3.10', '3.11', '3.12'],
-            parallel_builders=1,  # All builds use the same emulator and app ID.
+            name="skumaran-ubuntu-x86_64",
+            tags=['linux', 'unix', 'ubuntu', 'amd64', 'x86-64'],
+        ),
+        cpw(
+            name="stan-raspbian",
+            tags=['linux', 'unix', 'raspbian', 'debian', 'armv8',
+                  'aarch64', 'arm'],
+            parallel_tests=4,
+            # Tests fail with latin1 encoding on 3.12, probably earlier
+            not_branches=['3.12', '3.11', '3.10'],
+            # Problematic ISP causes issues connecting to testpython.net
+            exclude_test_resources=['urlfetch', 'network'],
+        ),
+        cpw(
+            name="ware-alpine",
+            tags=['linux', 'unix', 'alpine', 'docker', 'amd64', 'x86-64', 'musl'],
+            not_branches=['3.10', '3.11', '3.12', '3.13'],
+        ),
+        cpw(
+            name="ware-debian-x86",
+            tags=['linux', 'unix', 'debian', 'x86'],
+            parallel_tests=4,
+        ),
+        cpw(
+            name="ware-freebsd",
+            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
+            parallel_tests=4,
+        ),
+        cpw(
+            name="ware-win11",
+            tags=['windows', 'win11', 'amd64', 'x86-64'],
+            parallel_tests=2,
         ),
     ]
