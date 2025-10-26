@@ -339,4 +339,10 @@ def get_workers(settings):
             tags=['windows', 'win11', 'amd64', 'x86-64'],
             parallel_tests=2,
         ),
+        cpw(
+            name="ware-ws2025",
+            tags=["windows", "ws2025", "amd64", "x86-64", "clang", "clang20",
+                  "msvc", "v145", "v143"],
+            parallel_tests=4,
+        ),
     ]
