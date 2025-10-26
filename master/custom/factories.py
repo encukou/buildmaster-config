@@ -215,8 +215,11 @@ class UnixInstalledBuild(BaseBuild):
         installed_python = f"./target/bin/python{branch}"
         self.addStep(
             Configure(
-                command=["./configure", "--prefix", "$(PWD)/target"]
-                + self.configureFlags
+                command=[
+                    "./configure",
+                    *("--prefix", "$(PWD)/target"),
+                    *self.configureFlags,
+                ],
             )
         )
 
@@ -633,7 +636,7 @@ class BaseWindowsBuild(BaseBuild):
             ShellCommand(
                 name="pythoninfo",
                 description="pythoninfo",
-                command=self.python_command + ["-m", "test.pythoninfo"],
+                command=[*self.python_command, "-m", "test.pythoninfo"],
                 warnOnFailure=True,
             )
         )
@@ -1296,7 +1299,11 @@ class ValgrindBuild(UnixBuild):
     def setup(self, parallel, branch, **kwargs):
         self.addStep(
             Configure(
-                command=["./configure", "--prefix", "$(PWD)/target"] + self.configureFlags
+                command=[
+                    "./configure",
+                    "--prefix", "$(PWD)/target",
+                    *self.configureFlags
+                ],
             )
         )
 
