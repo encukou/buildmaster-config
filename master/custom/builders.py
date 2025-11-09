@@ -346,12 +346,13 @@ UNSTABLE_BUILDERS_NO_TIER = [
 ]
 
 
-def get_builders(settings):
+def get_builders(settings, workers):
     # Override with a default simple worker if we are using local workers
     if settings.use_local_worker:
         local_buildfactory = globals().get(settings.local_worker_buildfactory, UnixBuild)
         return [("Test Builder", "local-worker", local_buildfactory, STABLE, NO_TIER)]
 
+    workers_by_name = {w.name: w for w in workers}
     all_builders = []
     for builders, stability, tier in (
         (STABLE_BUILDERS_TIER_1, STABLE, TIER_1),
@@ -365,7 +366,8 @@ def get_builders(settings):
         (UNSTABLE_BUILDERS_NO_TIER, UNSTABLE, NO_TIER),
     ):
         for name, worker_name, buildfactory in builders:
-            all_builders.append((name, worker_name, buildfactory, stability, tier))
+            worker = workers_by_name[worker_name]
+            all_builders.append((name, worker, buildfactory, stability, tier))
     return all_builders
 
 
