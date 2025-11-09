@@ -9,7 +9,7 @@ from buildbot.steps.shell import (
 
 from buildbot.plugins import util
 
-from . import (MAIN_BRANCH_VERSION, MAIN_BRANCH_NAME,
+from . import (MAIN_BRANCH_VERSION, MAIN_BRANCH_NAME, PR_BRANCH_PLACEHOLDER,
                JUNIT_FILENAME)
 from .steps import (
     Test,
@@ -151,7 +151,7 @@ class UnixBuild(BaseBuild):
             env=self.test_environ,
             **oot_kwargs
         ))
-        if branch not in ("3",) and not has_option("-R", self.testFlags):
+        if branch not in {PR_BRANCH_PLACEHOLDER} and not has_option("-R", self.testFlags):
             filename = JUNIT_FILENAME
             if self.build_out_of_tree:
                 filename = os.path.join(out_of_tree_dir, filename)
@@ -206,7 +206,7 @@ class UnixInstalledBuild(BaseBuild):
     def setup(self, parallel_processes, branch, test_with_PTY=False, **kwargs):
         if branch == MAIN_BRANCH_NAME:
             branch = MAIN_BRANCH_VERSION
-        elif branch == "custom":
+        elif branch == PR_BRANCH_PLACEHOLDER:
             branch = "3"
         installed_python = f"./target/bin/python{branch}"
         self.addStep(
@@ -643,7 +643,7 @@ class BaseWindowsBuild(BaseBuild):
             command=test_command,
             timeout=step_timeout(self.test_timeout),
         ))
-        if branch not in ("3",) and not has_option("-R", self.testFlags):
+        if branch not in {PR_BRANCH_PLACEHOLDER} and not has_option("-R", self.testFlags):
             self.addStep(UploadTestResults(branch))
         self.addStep(Clean(command=clean_command))
 
@@ -859,7 +859,7 @@ class UnixCrossBuild(UnixBuild):
                 env=self.test_environ,
                 workdir=oot_host_path,
             ))
-            if branch not in ("3",) and not has_option("-R", self.testFlags):
+            if branch not in {PR_BRANCH_PLACEHOLDER} and not has_option("-R", self.testFlags):
                 filename = os.path.join(oot_host_path, JUNIT_FILENAME)
                 self.addStep(UploadTestResults(branch, filename=filename))
         self.addStep(
@@ -998,7 +998,7 @@ class _Wasm32WasiPreview1Build(UnixBuild):
                 workdir=host_path,
             )
         )
-        if branch not in ("3",) and not has_option("-R", self.testFlags):
+        if branch not in {PR_BRANCH_PLACEHOLDER} and not has_option("-R", self.testFlags):
             filename = os.path.join(host_path, JUNIT_FILENAME)
             self.addStep(UploadTestResults(branch, filename=filename))
 
