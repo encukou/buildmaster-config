@@ -46,9 +46,13 @@ class CPythonWorker:
         if settings.use_local_worker:
             self.bb_worker = _worker.LocalWorker(name)
         else:
-            self.bb_worker = _worker.Worker(name, str(pw),
-                                            notify_on_missing=emails,
-                                            keepalive_interval=KEEPALIVE)
+            self.bb_worker = _worker.Worker(
+                name,
+                str(pw),
+                notify_on_missing=emails,
+                keepalive_interval=KEEPALIVE,
+                max_builds=parallel_builders or 1,
+            )
 
 
 def get_workers(settings):
