@@ -43,16 +43,13 @@ class CPythonWorker:
         pw = worker_settings.get("password", None) or owner_settings.password
         owner_email = owner_settings.get("email", None)
         emails = [str(owner_email)] if owner_email else []
-        if settings.use_local_worker:
-            self.bb_worker = _worker.LocalWorker(name)
-        else:
-            self.bb_worker = _worker.Worker(
-                name,
-                str(pw),
-                notify_on_missing=emails,
-                keepalive_interval=KEEPALIVE,
-                max_builds=parallel_builders or 1,
-            )
+        self.bb_worker = _worker.Worker(
+            name,
+            str(pw),
+            notify_on_missing=emails,
+            keepalive_interval=KEEPALIVE,
+            max_builds=parallel_builders or 1,
+        )
 
 
 def get_workers(settings):
