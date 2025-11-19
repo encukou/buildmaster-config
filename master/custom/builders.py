@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from custom import PR_BRANCH_PLACEHOLDER
 from custom.factories import (
     BaseBuild,
     UnixBuild,
@@ -83,6 +84,8 @@ class CPythonBuilder:
     stability: str
     tier: Optional[str]
     workers: list[CPythonWorker]
+    branches: Optional[list[str]] = None
+    not_branches: Optional[list[str]] = None
 
 _builders = None
 
@@ -192,6 +195,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_1,
             w("itamaro-centos-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "AMD64 CentOS9 NoGIL Refleaks",
@@ -199,6 +203,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_1,
             w("itamaro-centos-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
 
         # Windows x86-64 MSVC
@@ -236,6 +241,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_1,
             w("itamaro-win64-srv-22-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "AMD64 Windows PGO NoGIL",
@@ -243,6 +249,8 @@ def get_builders(settings, workers):
             STABLE,
             TIER_1,
             w("itamaro-win64-srv-22-aws"),
+            branches=['3.x', PR_BRANCH_PLACEHOLDER],
+            not_branches=['3.10', '3.11', '3.12'],
         ),
 
         # -- Stable Tier-2 builder ------------------------------------------
@@ -336,6 +344,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("itamaro-macos-arm64-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "ARM64 MacOS M1 Refleaks NoGIL",
@@ -343,6 +352,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("itamaro-macos-arm64-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
 
         # macOS x86-64 clang
@@ -359,6 +369,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("itamaro-macos-intel-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "x86-64 MacOS Intel ASAN NoGIL",
@@ -366,6 +377,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("itamaro-macos-intel-aws"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
 
         # WASI
@@ -375,6 +387,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("bcannon-wasi"),
+            branches=['3.11', '3.12'],
         ),
         cpb(
             "wasm32-wasi",
@@ -382,6 +395,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("bcannon-wasi"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
 
         # -- Stable Tier-3 builder ------------------------------------------
@@ -560,6 +574,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_3,
             w("linaro-win-arm64"),
+            branches=['3.x', PR_BRANCH_PLACEHOLDER],
         ),
         cpb(
             "ARM64 Windows Non-Debug",
@@ -567,6 +582,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_3,
             w("linaro-win-arm64"),
+            branches=['3.x', PR_BRANCH_PLACEHOLDER],
         ),
 
         # iOS
@@ -640,6 +656,7 @@ def get_builders(settings, workers):
             STABLE,
             NO_TIER,
             w("pablogsal-arch-x86_64"),
+            branches=['3.x', PR_BRANCH_PLACEHOLDER],
         ),
         cpb(
             "ARM Raspbian Linux Asan",
@@ -781,6 +798,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_1,
             w("pablogsal-arch-x86_64"),
+            branches=['3.x', PR_BRANCH_PLACEHOLDER],
         ),
 
         # Windows MSVC
@@ -790,6 +808,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_1,
             w("bolen-windows10"),
+            branches=['3.x', PR_BRANCH_PLACEHOLDER],
         ),
 
         # -- Unstable Tier-2 builders ---------------------------------------
@@ -1023,6 +1042,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_2,
             w("kushaldas-wasi"),
+            branches=['3.11', '3.12'],
         ),
 
         # -- Unstable Tier-3 builders ---------------------------------------
@@ -1114,6 +1134,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("ware-alpine"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         # Linux GCC Fedora Rawhide Freethreading builders
         cpb(
@@ -1122,6 +1143,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-x86_64"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "aarch64 Fedora Rawhide NoGIL",
@@ -1129,6 +1151,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-aarch64"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "PPC64LE Fedora Rawhide NoGIL",
@@ -1136,6 +1159,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-ppc64le"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "s390x Fedora Rawhide NoGIL",
@@ -1143,6 +1167,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-s390x"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         # Linux GCC Fedora Rawhide Freethreading refleak builders
         cpb(
@@ -1151,6 +1176,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-x86_64"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "aarch64 Fedora Rawhide NoGIL refleaks",
@@ -1158,6 +1184,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-aarch64"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "PPC64LE Fedora Rawhide NoGIL refleaks",
@@ -1165,6 +1192,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-ppc64le"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
             "s390x Fedora Rawhide NoGIL refleaks",
@@ -1172,6 +1200,7 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             w("cstratak-fedora-rawhide-s390x"),
+            not_branches=['3.10', '3.11', '3.12'],
         ),
 
         # AIX ppc64
@@ -1231,13 +1260,3 @@ def get_builder_tier(builder: str) -> str:
             return b.tier or "no tier"
 
     return "unknown tier"
-
-
-# Match builder name (excluding the branch name) of builders that should only
-# run on the main and PR branches.
-ONLY_MAIN_BRANCH = (
-    "ARM64 Windows",
-    "Windows PGO",
-    "AMD64 Arch Linux Perf",
-    "AMD64 Arch Linux Valgrind",
-)
