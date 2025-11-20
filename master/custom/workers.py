@@ -51,6 +51,21 @@ class CPythonWorker:
             max_builds=parallel_builders or 1,
         )
 
+    def __repr__(self):
+        attrs = (
+            'name',
+            'tags',
+            'branches',
+            'not_branches',
+            'parallel_builders',
+            'parallel_processes',
+            'extra_factory_args',
+        )
+        s = ', '.join(
+            (f'{a}={v}' for a in attrs if (v := getattr(self, a)))
+        )
+        return f'<CPythonWorker {s}>'
+
 
 def get_workers(settings):
     cpw = partial(CPythonWorker, settings)
