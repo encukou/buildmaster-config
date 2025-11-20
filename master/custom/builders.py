@@ -94,6 +94,9 @@ class CPythonBuilder:
             worker_name = self.workers[0].name
             suffix = getattr(self.factory, "buildersuffix", "")
             builddir = worker_name + suffix
+        if branch == PR_BRANCH_PLACEHOLDER:
+            # Special case, to be killed
+            branch='pull_request'
         return f'{branch}.{builddir}'
 
 
@@ -405,6 +408,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_2,
             w("bcannon-wasi"),
+            builddir='bcannon-wasi.wasi.debug',
             not_branches=['3.10', '3.11', '3.12'],
         ),
 
@@ -602,6 +606,7 @@ def get_builders(settings, workers):
             STABLE,
             TIER_3,
             w("rkm-arm64-ios-simulator"),
+            builddir='rkm-arm64-ios-simulator.iOS-simulator.arm64',
         ),
 
         # Android
