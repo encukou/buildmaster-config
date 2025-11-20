@@ -84,8 +84,18 @@ class CPythonBuilder:
     stability: str
     tier: Optional[str]
     workers: list[CPythonWorker]
+    builddir: Optional[str] = None
     branches: Optional[list[str]] = None
     not_branches: Optional[list[str]] = None
+
+    def get_builddir(self, branch):
+        builddir = self.builddir
+        if builddir is None:
+            worker_name = self.workers[0].name
+            suffix = getattr(self.factory, "buildersuffix", "")
+            builddir = worker_name + suffix
+        return f'{branch}.{builddir}'
+
 
 _builders = None
 
