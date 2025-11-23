@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+import string
+from dataclasses import dataclass, KW_ONLY
 from typing import Optional
 
 from custom import PR_BRANCH_PLACEHOLDER
@@ -76,6 +77,19 @@ TIER_3 = "tier-3"
 NO_TIER = None
 
 
+class _NameTranslationMap:
+    def __getitem__(self, n):
+        c = chr(n)
+        if c in string.whitespace:
+            return '-'
+        if c in string.ascii_letters + string.digits:
+            return c
+        return None
+
+
+_name_tx_map = _NameTranslationMap()
+
+
 @dataclass
 class CPythonBuilder:
 
@@ -85,15 +99,21 @@ class CPythonBuilder:
     tier: Optional[str]
     workers: list[CPythonWorker]
     builddir: Optional[str] = None
+    _: KW_ONLY
     branches: Optional[list[str]] = None
     not_branches: Optional[list[str]] = None
+    builddir_from_name: bool = False
 
     def get_builddir(self, branch):
         builddir = self.builddir
         if builddir is None:
-            worker_name = self.workers[0].name
-            suffix = getattr(self.factory, "buildersuffix", "")
-            builddir = worker_name + suffix
+            if self.builddir_from_name:
+                builddir = self.name.lower().translate(_name_tx_map)
+            else:
+                worker_name = self.workers[0].name
+                suffix = getattr(self.factory, "buildersuffix", "")
+                builddir = worker_name + suffix
+
         if branch == PR_BRANCH_PLACEHOLDER:
             # Special case, to be killed
             branch='pull_request'
@@ -633,6 +653,7 @@ def get_builders(settings, workers):
             STABLE,
             NO_TIER,
             w("ware-alpine"),
+            builddir_from_name=True,
         ),
 
         # Linux x86-64 GCC/Clang
@@ -1150,6 +1171,7 @@ def get_builders(settings, workers):
             NO_TIER,
             w("ware-alpine"),
             not_branches=['3.10', '3.11', '3.12'],
+            builddir_from_name=True,
         ),
         # Linux GCC Fedora Rawhide Freethreading builders
         cpb(
