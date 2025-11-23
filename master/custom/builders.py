@@ -652,7 +652,7 @@ def get_builders(settings, workers):
             UnixBuild,
             STABLE,
             NO_TIER,
-            w("ware-alpine"),
+            w(tags={'amd64', 'alpine', 'linux'}),
             builddir_from_name=True,
         ),
 
@@ -718,14 +718,16 @@ def get_builders(settings, workers):
             NonDebugUnixBuild,
             STABLE,
             NO_TIER,
-            w("ware-debian-x86"),
+            w(tags={'x86', 'debian', 'linux'}),
+            builddir_from_name=True,
         ),
         cpb(
             "x86 Debian Installed with X",
             UnixInstalledBuild,
             STABLE,
             NO_TIER,
-            w("ware-debian-x86"),
+            w(tags={'x86', 'debian', 'linux'}),
+            builddir_from_name=True,
         ),
 
         # -- Unstable Tier-1 builders ---------------------------------------
@@ -1169,7 +1171,7 @@ def get_builders(settings, workers):
             UnixNoGilBuild,
             UNSTABLE,
             NO_TIER,
-            w("ware-alpine"),
+            w(tags={'amd64', 'alpine', 'linux'}),
             not_branches=['3.10', '3.11', '3.12'],
             builddir_from_name=True,
         ),
