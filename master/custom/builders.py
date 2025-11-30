@@ -140,12 +140,22 @@ def get_builders(settings, workers):
 
     workers_by_name = {w.name: w for w in workers}
 
-    def get_workers(name=None, tags=None):
+    def get_workers(
+        name: Optional[str] = None,
+        tags: Optional[set[str]] = None,
+        not_tags: Optional[set[str]] = None,
+    ):
         if name is not None:
             return [workers_by_name[name]]
         if tags is None:
             raise ValueError('must provide either name or tags')
-        return [w for w in workers if tags.issubset(w.tags)]
+        if not_tags is None:
+            not_tags = {*()}
+        return [
+            w
+            for w in workers
+            if tags.issubset(w.tags) and not not_tags.intersection(w.tags)
+        ]
 
     w = get_workers
     cpb = CPythonBuilder
@@ -259,14 +269,16 @@ def get_builders(settings, workers):
             Windows64ReleaseBuild,
             STABLE,
             TIER_1,
-            w("ware-win11"),
+            w(tags={'amd64', 'windows', 'win11'}, not_tags={'bigmem'}),
+            builddir_from_name=True,
         ),
         cpb(
             "AMD64 Windows11 Refleaks",
             Windows64RefleakBuild,
             STABLE,
             TIER_1,
-            w("ware-win11"),
+            w(tags={'amd64', 'windows', 'win11'}, not_tags={'bigmem'}),
+            builddir_from_name=True,
         ),
         cpb(
             "AMD64 Windows Server 2022 NoGIL",
