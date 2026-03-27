@@ -635,6 +635,15 @@ def get_builders(settings, workers):
             w("mhsmith-android-x86_64"),
         ),
 
+        # Emscripten
+        cpb(
+            "WASM Emscripten",
+            EmscriptenBuild,
+            STABLE,
+            TIER_3,
+            w("rkm-emscripten"),
+        ),
+
         # -- Stable No Tier builders ----------------------------------------
         # Linux x86-64 GCC musl
         cpb(
@@ -1162,15 +1171,6 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_3,
             w("opsec-fbsd16"),
-        ),
-
-        # Emscripten
-        cpb(
-            "WASM Emscripten",
-            EmscriptenBuild,
-            UNSTABLE,
-            TIER_3,
-            w("rkm-emscripten"),
         ),
 
         # -- Unstable No Tier builders --------------------------------------
