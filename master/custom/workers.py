@@ -272,6 +272,11 @@ def get_workers(settings):
             parallel_tests=4,
         ),
         cpw(
+            name="opsec-fbsd16",
+            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
+            parallel_tests=4,
+        ),
+        cpw(
             name="pablogsal-arch-x86_64",
             tags=['linux', 'unix', 'arch', 'amd64', 'x86-64'],
         ),
