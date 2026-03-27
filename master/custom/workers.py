@@ -345,4 +345,9 @@ def get_workers(settings):
                   "msvc", "v145", "v143"],
             parallel_tests=4,
         ),
+        cpw(
+            name="malvex-nixos-x86_64",
+            tags=['linux', 'unix', 'nixos', 'amd64', 'x86-64'],
+            parallel_tests=10,
+        ),
     ]
