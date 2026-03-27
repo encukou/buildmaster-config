@@ -246,6 +246,15 @@ def get_builders(settings, workers):
             w("itamaro-win64-srv-22-aws"),
         ),
 
+        # Tests that require the 'tzdata' and 'xpickle' resources
+        cpb(
+            "aarch64 Ubuntu Oddballs",
+            UnixOddballsBuild,
+            STABLE,
+            TIER_1,
+            w("stan-aarch64-ubuntu"),
+        ),
+
         # -- Stable Tier-2 builder ------------------------------------------
         # Fedora Linux x86-64 Clang
         cpb(
@@ -684,15 +693,6 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_1,
             w("diegorusso-aarch64-bigmem"),
-        ),
-
-        # Tests that require the 'tzdata' and 'xpickle' resources
-        cpb(
-            "aarch64 Ubuntu Oddballs",
-            UnixOddballsBuild,
-            UNSTABLE,
-            TIER_1,
-            w("stan-aarch64-ubuntu"),
         ),
 
         # Linux x86-64 GCC
