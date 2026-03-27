@@ -6,7 +6,7 @@ from custom.factories import (
     BaseBuild,
     UnixBuild,
     UnixPerfBuild,
-    UnixXPickleBuild,
+    UnixOddballsBuild,
     RHEL8Build,
     CentOS9Build,
     FedoraStableBuild,
@@ -701,10 +701,10 @@ def get_builders(settings, workers):
             w("diegorusso-aarch64-bigmem"),
         ),
 
-        # test_xpickle
+        # Tests that require the 'tzdata' and 'xpickle' resources
         cpb(
-            "aarch64 Ubuntu test_xpickle",
-            UnixXPickleBuild,
+            "aarch64 Ubuntu Oddballs",
+            UnixOddballsBuild,
             UNSTABLE,
             TIER_1,
             w("stan-aarch64-ubuntu"),
