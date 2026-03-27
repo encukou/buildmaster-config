@@ -289,22 +289,11 @@ class UnixBigmemBuild(UnixBuild):
     factory_tags = ["bigmem"]
 
 
-class AIXBuild(UnixBuild):
-    configureFlags = [
-        "--with-pydebug",
-        "--with-openssl=/opt/aixtools",
-    ]
-
-
-class AIXBuildWithXLC(UnixBuild):
-    buildersuffix = ".xlc"
-    configureFlags = [
-        "--with-pydebug",
-        "--with-openssl=/opt/aixtools",
-        "CC=xlc_r",
-        "LD=xlc_r",
-    ]
-    factory_tags = ["xlc"]
+class UnixOddballsBuild(UnixBuild):
+    buildersuffix = ".oddballs"
+    testFlags = ["-u", "xpickle,tzdata",
+                 "test_xpickle", "test_zoneinfo", "test_datetime"]
+    factory_tags = ["xpickle", "tzdata"]
 
 
 class NonDebugUnixBuild(UnixBuild):
@@ -698,11 +687,17 @@ class Windows64ReleaseBuild(Windows64Build):
     factory_tags = ["win64", "nondebug"]
 
 
-class Windows64PGOBuild(Windows64ReleaseBuild):
+class Windows64PGOBuild(Windows64Build):
     buildersuffix = ".pgo"
     buildFlags = Windows64Build.buildFlags + ["--pgo"]
     testFlags = [*Windows64Build.testFlags, "+d"]
     factory_tags = ["win64", "nondebug", "pgo"]
+
+
+class Windows64PGOTailcallBuild(Windows64PGOBuild):
+    buildersuffix = ".tailcall.pgo"
+    buildFlags = Windows64PGOBuild.buildFlags + ["--tail-call-interp"]
+    factory_tags = Windows64PGOBuild.factory_tags  + ["tailcall"]
 
 
 class Windows64NoGilBuild(Windows64Build):
@@ -717,6 +712,12 @@ class Windows64PGONoGilBuild(Windows64PGOBuild):
     buildFlags = Windows64PGOBuild.buildFlags + ["--disable-gil"]
     testFlags = Windows64PGOBuild.testFlags + ["--disable-gil"]
     factory_tags = ["win64", "nogil", "nondebug", "pgo"]
+
+
+class Windows64PGONoGilTailcallBuild(Windows64PGONoGilBuild):
+    buildersuffix = '.nogil.tailcall.pgo'
+    buildFlags = Windows64PGONoGilBuild.buildFlags + ["--tail-call-interp"]
+    factory_tags = Windows64PGONoGilBuild.factory_tags + ["tailcall"]
 
 
 class WindowsARM64Build(BaseWindowsBuild):
