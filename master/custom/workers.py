@@ -335,16 +335,17 @@ def get_workers(settings):
             name="ware-alpine",
             tags=['linux', 'unix', 'alpine', 'docker', 'amd64', 'x86-64', 'musl'],
             not_branches=['3.10', '3.11', '3.12', '3.13'],
+            parallel_tests=6,
         ),
         cpw(
             name="ware-debian-x86",
             tags=['linux', 'unix', 'debian', 'x86'],
-            parallel_tests=4,
+            parallel_tests=6,
         ),
         cpw(
             name="ware-freebsd",
             tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
-            parallel_tests=4,
+            parallel_tests=6,
         ),
         cpw(
             name="ware-win11",
