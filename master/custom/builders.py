@@ -42,7 +42,9 @@ from custom.factories import (
     Windows64BigmemBuild,
     Windows64NoGilBuild,
     Windows64PGOBuild,
+    Windows64PGOTailcallBuild,
     Windows64PGONoGilBuild,
+    Windows64PGONoGilTailcallBuild,
     Windows64RefleakBuild,
     Windows64ReleaseBuild,
     MacOSArmWithBrewBuild,
@@ -855,6 +857,20 @@ def get_builders(settings, workers):
             TIER_1,
             w("bolen-windows10"),
             branches=['3.x', PR_BRANCH_PLACEHOLDER],
+        ),
+        cpb(
+            "AMD64 Windows PGO Tailcall",
+            Windows64PGOTailcallBuild,
+            UNSTABLE,
+            TIER_1,
+            w("itamaro-win64-srv-22-aws"),
+        ),
+        cpb(
+            "AMD64 Windows PGO NoGIL Tailcall",
+            Windows64PGONoGilTailcallBuild,
+            UNSTABLE,
+            TIER_1,
+            w("itamaro-win64-srv-22-aws"),
         ),
 
         # -- Unstable Tier-2 builders ---------------------------------------
