@@ -59,7 +59,7 @@ def get_workers(settings):
         cpw(
             name="ambv-bb-win11",
             tags=['windows', 'win11', 'amd64', 'x86-64', 'bigmem'],
-            not_branches=['3.10', '3.11', '3.12', '3.13'],
+            not_branches=['3.10', '3.11', '3.12', '3.13', '3.14'],
             parallel_processes=4,
         ),
         cpw(
@@ -356,5 +356,10 @@ def get_workers(settings):
             tags=["windows", "ws2025", "amd64", "x86-64", "clang", "clang20",
                   "msvc", "v145", "v143"],
             parallel_processes=4,
+        ),
+        cpw(
+            name="malvex-nixos-x86_64",
+            tags=['linux', 'unix', 'nixos', 'amd64', 'x86-64'],
+            parallel_tests=10,
         ),
     ]
