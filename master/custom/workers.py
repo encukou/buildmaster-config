@@ -341,4 +341,9 @@ def get_workers(settings):
             tags=['windows', 'win11', 'amd64', 'x86-64'],
             parallel_tests=2,
         ),
+        cpw(
+            name="malvex-nixos-x86_64",
+            tags=['linux', 'unix', 'nixos', 'amd64', 'x86-64'],
+            parallel_tests=10,
+        ),
     ]
