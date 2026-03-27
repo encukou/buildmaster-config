@@ -18,6 +18,7 @@ from .steps import (
     LockInstall,
     Uninstall,
     UploadTestResults,
+    PythonInfo,
 )
 
 # This (default) timeout is for each individual test file.
@@ -134,16 +135,11 @@ class UnixBuild(BaseBuild):
         self.addStep(Compile(command=compile,
                              env=self.compile_environ,
                              **oot_kwargs))
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=["make", "pythoninfo"],
-                warnOnFailure=True,
-                env=self.test_environ,
-                **oot_kwargs
-            )
-        )
+        self.addStep(PythonInfo(
+            command=["make", "pythoninfo"],
+            env=self.test_environ,
+            **oot_kwargs
+        ))
         self.addStep(Test(
             command=test,
             timeout=step_timeout(self.test_timeout),
@@ -236,14 +232,9 @@ class UnixInstalledBuild(BaseBuild):
         self.addStep(Compile(command=compile))
         self.addStep(Install(command=install))
         self.addStep(LockInstall())
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=[installed_python, "-m", "test.pythoninfo"],
-                warnOnFailure=True,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=[installed_python, "-m", "test.pythoninfo"],
+        ))
         self.addStep(Test(
             command=test,
             timeout=step_timeout(self.test_timeout),
@@ -619,14 +610,9 @@ class BaseWindowsBuild(BaseBuild):
             test_command.extend((r"--junit-xml", JUNIT_FILENAME))
         clean_command = self.clean_command + self.cleanFlags
         self.addStep(Compile(command=build_command))
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=[*self.python_command, "-m", "test.pythoninfo"],
-                warnOnFailure=True,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=[*self.python_command, "-m", "test.pythoninfo"],
+        ))
         test_command.extend(("--timeout", str(self.test_timeout)))
         self.addStep(Test(
             command=test_command,
@@ -843,16 +829,11 @@ class UnixCrossBuild(UnixBuild):
             )
         )
         if self.can_execute_python:
-            self.addStep(
-                ShellCommand(
-                    name="pythoninfo",
-                    description="pythoninfo",
-                    command=["make", "pythoninfo"],
-                    warnOnFailure=True,
-                    env=self.test_environ,
-                    workdir=oot_host_path,
-                )
-            )
+            self.addStep(PythonInfo(
+                command=["make", "pythoninfo"],
+                env=self.test_environ,
+                workdir=oot_host_path,
+            ))
             self.addStep(Test(
                 command=test,
                 timeout=step_timeout(self.test_timeout),
@@ -969,15 +950,10 @@ class _Wasm32WasiPreview1Build(UnixBuild):
             )
         )
 
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=["make", "pythoninfo"],
-                warnOnFailure=True,
-                workdir=host_path,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=["make", "pythoninfo"],
+            workdir=host_path,
+        ))
 
         # Copied from UnixBuild.
         testopts = [*self.testFlags, f"-j{parallel_processes or 2}"]
@@ -1291,15 +1267,10 @@ class ValgrindBuild(UnixBuild):
 
         self.addStep(Compile(command=compile, env=self.compile_environ))
 
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=["make", "pythoninfo"],
-                warnOnFailure=True,
-                env=self.test_environ,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=["make", "pythoninfo"],
+            env=self.test_environ,
+        ))
 
         test = [
             "valgrind",
@@ -1373,6 +1344,12 @@ class EmscriptenBuild(BaseBuild):
             Compile(
                 name="Compile host Python",
                 command=["python3", "Platforms/emscripten", "make-host"],
+                env=compile_environ,
+            ),
+            PythonInfo(
+                command=[
+                    "python3", "Platforms/emscripten", "run", "--pythoninfo",
+                ],
                 env=compile_environ,
             ),
             Test(
