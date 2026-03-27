@@ -192,11 +192,6 @@ def get_workers(settings):
             parallel_tests=8,
         ),
         cpw(
-            name="edelsohn-aix-ppc64",
-            tags=['aix', 'unix', 'ppc64'],
-            parallel_tests=10,
-        ),
-        cpw(
             name="gps-raspbian",
             tags=['linux', 'unix', 'raspbian', 'debian', 'armv6', 'armv7l',
                   'aarch32', 'arm'],
