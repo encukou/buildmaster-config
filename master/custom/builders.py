@@ -239,8 +239,22 @@ def get_builders(settings, workers):
             w("itamaro-win64-srv-22-aws"),
         ),
         cpb(
+            "AMD64 Windows PGO Tailcall",
+            Windows64PGOTailcallBuild,
+            STABLE,
+            TIER_1,
+            w("itamaro-win64-srv-22-aws"),
+        ),
+        cpb(
             "AMD64 Windows PGO NoGIL",
             Windows64PGONoGilBuild,
+            STABLE,
+            TIER_1,
+            w("itamaro-win64-srv-22-aws"),
+        ),
+        cpb(
+            "AMD64 Windows PGO NoGIL Tailcall",
+            Windows64PGONoGilTailcallBuild,
             STABLE,
             TIER_1,
             w("itamaro-win64-srv-22-aws"),
@@ -809,20 +823,6 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_1,
             w("bolen-windows10"),
-        ),
-        cpb(
-            "AMD64 Windows PGO Tailcall",
-            Windows64PGOTailcallBuild,
-            UNSTABLE,
-            TIER_1,
-            w("itamaro-win64-srv-22-aws"),
-        ),
-        cpb(
-            "AMD64 Windows PGO NoGIL Tailcall",
-            Windows64PGONoGilTailcallBuild,
-            UNSTABLE,
-            TIER_1,
-            w("itamaro-win64-srv-22-aws"),
         ),
 
         # -- Unstable Tier-2 builders ---------------------------------------
