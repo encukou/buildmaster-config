@@ -290,6 +290,13 @@ def get_builders(settings, workers):
             not_branches=['3.10', '3.11', '3.12'],
         ),
         cpb(
+            "AMD64 Windows PGO Tailcall",
+            Windows64PGOTailcallBuild,
+            STABLE,
+            TIER_1,
+            w("itamaro-win64-srv-22-aws"),
+        ),
+        cpb(
             "AMD64 Windows PGO NoGIL",
             Windows64PGONoGilBuild,
             STABLE,
@@ -297,6 +304,13 @@ def get_builders(settings, workers):
             w("itamaro-win64-srv-22-aws"),
             branches=['3.x', PR_BRANCH_PLACEHOLDER],
             not_branches=['3.10', '3.11', '3.12'],
+        ),
+        cpb(
+            "AMD64 Windows PGO NoGIL Tailcall",
+            Windows64PGONoGilTailcallBuild,
+            STABLE,
+            TIER_1,
+            w("itamaro-win64-srv-22-aws"),
         ),
 
         # Tests that require the 'tzdata' and 'xpickle' resources
@@ -878,20 +892,6 @@ def get_builders(settings, workers):
             TIER_1,
             w("bolen-windows10"),
             branches=['3.x', PR_BRANCH_PLACEHOLDER],
-        ),
-        cpb(
-            "AMD64 Windows PGO Tailcall",
-            Windows64PGOTailcallBuild,
-            UNSTABLE,
-            TIER_1,
-            w("itamaro-win64-srv-22-aws"),
-        ),
-        cpb(
-            "AMD64 Windows PGO NoGIL Tailcall",
-            Windows64PGONoGilTailcallBuild,
-            UNSTABLE,
-            TIER_1,
-            w("itamaro-win64-srv-22-aws"),
         ),
 
         # -- Unstable Tier-2 builders ---------------------------------------
