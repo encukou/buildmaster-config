@@ -1213,6 +1213,29 @@ def get_builders(settings, workers):
             not_branches=['3.10', '3.11', '3.12'],
         ),
 
+        # Linux x86-64 NixOS Unstable
+        cpb(
+            "AMD64 NixOS Unstable",
+            UnixBuild,
+            UNSTABLE,
+            NO_TIER,
+            "malvex-nixos-x86_64",
+        ),
+        cpb(
+            "AMD64 NixOS Unstable Refleaks",
+            UnixRefleakBuild,
+            UNSTABLE,
+            NO_TIER,
+            "malvex-nixos-x86_64",
+        ),
+        cpb(
+            "AMD64 NixOS Unstable Perf",
+            UnixPerfBuild,
+            UNSTABLE,
+            NO_TIER,
+            "malvex-nixos-x86_64",
+        ),
+
         # AIX ppc64
         cpb(
             "PPC64 AIX",
