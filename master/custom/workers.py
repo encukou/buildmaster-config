@@ -291,7 +291,7 @@ def get_workers(settings):
         cpw(
             name="pablogsal-rasp",
             tags=['linux', 'unix', 'raspbian', 'debian', 'arm'],
-            parallel_processes=2,
+            parallel_processes=1,  # Reduced from 2: ASAN builds use 2-10x more memory
             # Problematic ISP causes issues connecting to testpython.net
             extra_factory_args=dict(
                 exclude_test_resources=['urlfetch', 'network'],
