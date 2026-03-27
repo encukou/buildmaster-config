@@ -1,6 +1,7 @@
 from custom.factories import (
     UnixBuild,
     UnixPerfBuild,
+    UnixOddballsBuild,
     RHEL8Build,
     CentOS9Build,
     FedoraStableBuild,
@@ -14,8 +15,6 @@ from custom.factories import (
     UnixNoGilBuild,
     UnixNoGilRefleakBuild,
     MacOSAsanNoGilBuild,
-    AIXBuild,
-    AIXBuildWithXLC,
     ClangUnixBuild,
     ClangUbsanLinuxBuild,
     ClangUbsanFunctionLinuxBuild,
@@ -37,7 +36,9 @@ from custom.factories import (
     Windows64BigmemBuild,
     Windows64NoGilBuild,
     Windows64PGOBuild,
+    Windows64PGOTailcallBuild,
     Windows64PGONoGilBuild,
+    Windows64PGONoGilTailcallBuild,
     Windows64RefleakBuild,
     Windows64ReleaseBuild,
     MacOSArmWithBrewBuild,
@@ -93,6 +94,9 @@ STABLE_BUILDERS_TIER_1 = [
     ("AMD64 Windows11 Refleaks", "ware-win11", Windows64RefleakBuild),
     ("AMD64 Windows Server 2022 NoGIL", "itamaro-win64-srv-22-aws", Windows64NoGilBuild),
     ("AMD64 Windows PGO NoGIL", "itamaro-win64-srv-22-aws", Windows64PGONoGilBuild),
+
+    # Tests that require the 'tzdata' and 'xpickle' resources
+    ("aarch64 Ubuntu Oddballs", "stan-aarch64-ubuntu", UnixOddballsBuild),
 ]
 
 
@@ -206,7 +210,6 @@ STABLE_BUILDERS_NO_TIER = [
 
 # -- Unstable Tier-1 builders -------------------------------------------
 UNSTABLE_BUILDERS_TIER_1 = [
-
     # Ubuntu Linux AArch64
     ("aarch64 Ubuntu 24.04 BigMem", "diegorusso-aarch64-bigmem", UnixBigmemBuild),
 
@@ -232,6 +235,9 @@ UNSTABLE_BUILDERS_TIER_1 = [
 
     # Windows MSVC
     ("AMD64 Windows PGO", "bolen-windows10", Windows64PGOBuild),
+    ("AMD64 Windows PGO Tailcall", "itamaro-win64-srv-22-aws", Windows64PGOTailcallBuild),
+    ("AMD64 Windows PGO NoGIL Tailcall", "itamaro-win64-srv-22-aws", Windows64PGONoGilTailcallBuild),
+
 ]
 
 
@@ -336,10 +342,6 @@ UNSTABLE_BUILDERS_NO_TIER = [
     ("AMD64 NixOS Unstable", "malvex-nixos-x86_64", UnixBuild),
     ("AMD64 NixOS Unstable Refleaks", "malvex-nixos-x86_64", UnixRefleakBuild),
     ("AMD64 NixOS Unstable Perf", "malvex-nixos-x86_64", UnixPerfBuild),
-
-    # AIX ppc64
-    ("PPC64 AIX", "edelsohn-aix-ppc64", AIXBuild),
-    ("PPC64 AIX XLC", "edelsohn-aix-ppc64", AIXBuildWithXLC),
 
     # Solaris sparcv9
     ("SPARCv9 Oracle Solaris 11.4", "kulikjak-solaris-sparcv9", UnixBuild),
