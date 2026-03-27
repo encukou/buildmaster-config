@@ -190,11 +190,6 @@ def get_workers(settings):
             parallel_tests=8,
         ),
         cpw(
-            name="edelsohn-aix-ppc64",
-            tags=['aix', 'unix', 'ppc64'],
-            parallel_tests=10,
-        ),
-        cpw(
             name="gps-raspbian",
             tags=['linux', 'unix', 'raspbian', 'debian', 'armv6', 'armv7l',
                   'aarch32', 'arm'],
@@ -206,6 +201,23 @@ def get_workers(settings):
             not_branches=['3.10', '3.11', '3.12'],
             parallel_tests=10,
             parallel_builders=2,
+        ),
+        cpw(
+            name="stan-aarch64-ubuntu",
+            tags=['linux', 'unix', 'ubuntu', 'arm', 'arm64', 'aarch64'],
+            parallel_tests=4,
+            # test_xpickle doesn't exist on these branches
+            not_branches=['3.12', '3.11', '3.10'],
+        ),
+        cpw(
+            name="stan-raspbian",
+            tags=['linux', 'unix', 'raspbian', 'debian', 'armv8',
+                  'aarch64', 'arm'],
+            parallel_tests=4,
+            # Tests fail with latin1 encoding on 3.12, probably earlier
+            not_branches=['3.12', '3.11', '3.10'],
+            # Problematic ISP causes issues connecting to testpython.net
+            exclude_test_resources=['urlfetch', 'network'],
         ),
         cpw(
             name="itamaro-macos-arm64-aws",
@@ -272,13 +284,22 @@ def get_workers(settings):
             parallel_tests=4,
         ),
         cpw(
+            name="opsec-fbsd16",
+            tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
+            parallel_tests=4,
+        ),
+        cpw(
             name="pablogsal-arch-x86_64",
             tags=['linux', 'unix', 'arch', 'amd64', 'x86-64'],
+            # Problematic ISP causes issues connecting to testpython.net
+            exclude_test_resources=['urlfetch', 'network'],
         ),
         cpw(
             name="pablogsal-macos-m1",
             tags=['macOS', 'unix', 'arm', 'arm64'],
             parallel_tests=4,
+            # Problematic ISP causes issues connecting to testpython.net
+            exclude_test_resources=['urlfetch', 'network'],
         ),
         cpw(
             name="pablogsal-rasp",
@@ -323,16 +344,17 @@ def get_workers(settings):
             name="ware-alpine",
             tags=['linux', 'unix', 'alpine', 'docker', 'amd64', 'x86-64', 'musl'],
             not_branches=['3.10', '3.11', '3.12', '3.13'],
+            parallel_tests=6,
         ),
         cpw(
             name="ware-debian-x86",
             tags=['linux', 'unix', 'debian', 'x86'],
-            parallel_tests=4,
+            parallel_tests=6,
         ),
         cpw(
             name="ware-freebsd",
             tags=['freebsd', 'bsd', 'unix', 'amd64', 'x86-64'],
-            parallel_tests=4,
+            parallel_tests=6,
         ),
         cpw(
             name="ware-win11",
@@ -344,5 +366,10 @@ def get_workers(settings):
             tags=["windows", "ws2025", "amd64", "x86-64", "clang", "clang20",
                   "msvc", "v145", "v143"],
             parallel_tests=4,
+        ),
+        cpw(
+            name="malvex-nixos-x86_64",
+            tags=['linux', 'unix', 'nixos', 'amd64', 'x86-64'],
+            parallel_tests=10,
         ),
     ]

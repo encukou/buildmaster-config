@@ -18,6 +18,7 @@ from .steps import (
     LockInstall,
     Uninstall,
     UploadTestResults,
+    PythonInfo,
 )
 
 # This (default) timeout is for each individual test file.
@@ -138,16 +139,11 @@ class UnixBuild(BaseBuild):
         self.addStep(Compile(command=compile,
                              env=self.compile_environ,
                              **oot_kwargs))
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=["make", "pythoninfo"],
-                warnOnFailure=True,
-                env=self.test_environ,
-                **oot_kwargs
-            )
-        )
+        self.addStep(PythonInfo(
+            command=["make", "pythoninfo"],
+            env=self.test_environ,
+            **oot_kwargs
+        ))
         self.addStep(Test(
             command=test,
             timeout=step_timeout(self.test_timeout),
@@ -240,14 +236,9 @@ class UnixInstalledBuild(BaseBuild):
         self.addStep(Compile(command=compile))
         self.addStep(Install(command=install))
         self.addStep(LockInstall())
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=[installed_python, "-m", "test.pythoninfo"],
-                warnOnFailure=True,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=[installed_python, "-m", "test.pythoninfo"],
+        ))
         self.addStep(Test(
             command=test,
             timeout=step_timeout(self.test_timeout),
@@ -293,22 +284,11 @@ class UnixBigmemBuild(UnixBuild):
     factory_tags = ["bigmem"]
 
 
-class AIXBuild(UnixBuild):
-    configureFlags = [
-        "--with-pydebug",
-        "--with-openssl=/opt/aixtools",
-    ]
-
-
-class AIXBuildWithXLC(UnixBuild):
-    buildersuffix = ".xlc"
-    configureFlags = [
-        "--with-pydebug",
-        "--with-openssl=/opt/aixtools",
-        "CC=xlc_r",
-        "LD=xlc_r",
-    ]
-    factory_tags = ["xlc"]
+class UnixOddballsBuild(UnixBuild):
+    buildersuffix = ".oddballs"
+    testFlags = ["-u", "xpickle,tzdata",
+                 "test_xpickle", "test_zoneinfo", "test_datetime"]
+    factory_tags = ["xpickle", "tzdata"]
 
 
 class NonDebugUnixBuild(UnixBuild):
@@ -632,14 +612,9 @@ class BaseWindowsBuild(BaseBuild):
         if parallel:
             test_command.append(parallel)
         self.addStep(Compile(command=build_command))
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=[*self.python_command, "-m", "test.pythoninfo"],
-                warnOnFailure=True,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=[*self.python_command, "-m", "test.pythoninfo"],
+        ))
         test_command.extend(("--timeout", str(self.test_timeout)))
         self.addStep(Test(
             command=test_command,
@@ -700,11 +675,17 @@ class Windows64ReleaseBuild(Windows64Build):
     factory_tags = ["win64", "nondebug"]
 
 
-class Windows64PGOBuild(Windows64ReleaseBuild):
+class Windows64PGOBuild(Windows64Build):
     buildersuffix = ".pgo"
     buildFlags = Windows64Build.buildFlags + ["--pgo"]
     testFlags = [*Windows64Build.testFlags, "+d"]
     factory_tags = ["win64", "nondebug", "pgo"]
+
+
+class Windows64PGOTailcallBuild(Windows64PGOBuild):
+    buildersuffix = ".tailcall.pgo"
+    buildFlags = Windows64PGOBuild.buildFlags + ["--tail-call-interp"]
+    factory_tags = Windows64PGOBuild.factory_tags  + ["tailcall"]
 
 
 class Windows64NoGilBuild(Windows64Build):
@@ -719,6 +700,12 @@ class Windows64PGONoGilBuild(Windows64PGOBuild):
     buildFlags = Windows64PGOBuild.buildFlags + ["--disable-gil"]
     testFlags = Windows64PGOBuild.testFlags + ["--disable-gil"]
     factory_tags = ["win64", "nogil", "nondebug", "pgo"]
+
+
+class Windows64PGONoGilTailcallBuild(Windows64PGONoGilBuild):
+    buildersuffix = '.nogil.tailcall.pgo'
+    buildFlags = Windows64PGONoGilBuild.buildFlags + ["--tail-call-interp"]
+    factory_tags = Windows64PGONoGilBuild.factory_tags + ["tailcall"]
 
 
 class WindowsARM64Build(BaseWindowsBuild):
@@ -854,16 +841,11 @@ class UnixCrossBuild(UnixBuild):
             )
         )
         if self.can_execute_python:
-            self.addStep(
-                ShellCommand(
-                    name="pythoninfo",
-                    description="pythoninfo",
-                    command=["make", "pythoninfo"],
-                    warnOnFailure=True,
-                    env=self.test_environ,
-                    workdir=oot_host_path,
-                )
-            )
+            self.addStep(PythonInfo(
+                command=["make", "pythoninfo"],
+                env=self.test_environ,
+                workdir=oot_host_path,
+            ))
             self.addStep(Test(
                 command=test,
                 timeout=step_timeout(self.test_timeout),
@@ -980,15 +962,10 @@ class _Wasm32WasiPreview1Build(UnixBuild):
             )
         )
 
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=["make", "pythoninfo"],
-                warnOnFailure=True,
-                workdir=host_path,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=["make", "pythoninfo"],
+            workdir=host_path,
+        ))
 
         # Copied from UnixBuild.
         testopts = list(self.testFlags)
@@ -1313,15 +1290,10 @@ class ValgrindBuild(UnixBuild):
 
         self.addStep(Compile(command=compile, env=self.compile_environ))
 
-        self.addStep(
-            ShellCommand(
-                name="pythoninfo",
-                description="pythoninfo",
-                command=["make", "pythoninfo"],
-                warnOnFailure=True,
-                env=self.test_environ,
-            )
-        )
+        self.addStep(PythonInfo(
+            command=["make", "pythoninfo"],
+            env=self.test_environ,
+        ))
 
         test = [
             "valgrind",
@@ -1363,54 +1335,53 @@ class EmscriptenBuild(BaseBuild):
 
     def setup(self, **kwargs):
         compile_environ = {
-            "PATH": os.pathsep.join([
-                "/home/emscripten/emsdk",
-                "/home/emscripten/emsdk/upstream/emscripten",
-                "/home/emscripten/.local/bin",
-                "/usr/local/bin",
-                "/usr/bin",
-                "/bin",
-            ]),
-            "EMSDK": "/home/emscripten/emsdk",
-            "PYTHON_NODE_VERSION": "24",
+            "EMSDK_CACHE": "/home/emscripten/emsdk-versions",
         }
 
         self.addSteps([
             Configure(
+                name="Install emscripten (if needed)",
+                command=["python3", "Platforms/emscripten", "install-emscripten"],
+                env=compile_environ,
+            ),
+            Configure(
                 name="Configure build Python",
-                command=["python3", "Tools/wasm/emscripten", "configure-build-python"],
+                command=["python3", "Platforms/emscripten", "configure-build-python"],
                 env=compile_environ,
             ),
             Compile(
                 name="Compile build Python",
-                command=["python3", "Tools/wasm/emscripten", "make-build-python"],
+                command=["python3", "Platforms/emscripten", "make-build-python"],
                 env=compile_environ,
             ),
             Compile(
-                name="Compile host libFFI",
-                command=["python3", "Tools/wasm/emscripten", "make-libffi"],
+                name="Compile host dependencies (if needed)",
+                command=["python3", "Platforms/emscripten", "make-dependencies"],
                 env=compile_environ,
             ),
             Configure(
                 name="Configure host Python",
-                command=["python3", "Tools/wasm/emscripten", "configure-host"],
+                command=["python3", "Platforms/emscripten", "configure-host"],
                 env=compile_environ,
             ),
             Compile(
                 name="Compile host Python",
-                command=["python3", "Tools/wasm/emscripten", "make-host"],
+                command=["python3", "Platforms/emscripten", "make-host"],
+                env=compile_environ,
+            ),
+            PythonInfo(
+                command=[
+                    "python3", "Platforms/emscripten", "run", "--pythoninfo",
+                ],
                 env=compile_environ,
             ),
             Test(
                 name="Node full test suite",
                 command=[
-                    "cross-build/wasm32-emscripten/build/python/python.sh",
-                    "-m", "test",
-                    "-v",
-                    "-uall",
-                    "--rerun",
-                    "--single-process",
-                    "-W",
+                    "python3",
+                    "Platforms/emscripten",
+                    "run",
+                    "--test",
                 ],
                 env=compile_environ,
                 timeout=step_timeout(self.test_timeout),
@@ -1418,14 +1389,14 @@ class EmscriptenBuild(BaseBuild):
             Test(
                 name="PyRepl in Chrome smoke test",
                 command=[
-                    "Tools/wasm/emscripten/browser_test/run_test.sh",
+                    "Platforms/emscripten/browser_test/run_test.sh",
                 ],
                 env=compile_environ,
                 timeout=step_timeout(self.test_timeout),
             ),
             Clean(
                 name="Clean the builds",
-                command=["python3", "Tools/wasm/emscripten", "clean"],
+                command=["python3", "Platforms/emscripten", "clean"],
                 env=compile_environ,
             )
         ])
