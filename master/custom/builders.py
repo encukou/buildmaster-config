@@ -558,7 +558,7 @@ def get_builders(settings, workers):
             w("savannah-raspbian"),
         ),
 
-        # FreBSD x86-64 clang
+        # FreeBSD x86-64 clang
         cpb(
             "AMD64 FreeBSD",
             UnixBuild,
@@ -1130,6 +1130,14 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_3,
             w("opsec-fbsd15"),
+        ),
+        # FreeBSD 16 is CURRENT: development branch (at 2026-01-09)
+        cpb(
+            "AMD64 FreeBSD16",
+            UnixBuild,
+            UNSTABLE,
+            TIER_3,
+            w("opsec-fbsd16"),
         ),
 
         # Emscripten
