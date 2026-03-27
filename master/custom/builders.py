@@ -7,6 +7,7 @@ from custom.factories import (
     BaseBuild,
     UnixBuild,
     UnixPerfBuild,
+    UnixXPickleBuild,
     RHEL8Build,
     CentOS9Build,
     FedoraStableBuild,
@@ -748,6 +749,15 @@ def get_builders(settings, workers):
             UNSTABLE,
             TIER_1,
             w("diegorusso-aarch64-bigmem"),
+        ),
+
+        # test_xpickle
+        cpb(
+            "aarch64 Ubuntu test_xpickle",
+            UnixXPickleBuild,
+            UNSTABLE,
+            TIER_1,
+            w("stan-aarch64-ubuntu"),
         ),
 
         # Linux x86-64 GCC
