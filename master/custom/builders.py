@@ -20,8 +20,6 @@ from custom.factories import (
     UnixNoGilBuild,
     UnixNoGilRefleakBuild,
     MacOSAsanNoGilBuild,
-    AIXBuild,
-    AIXBuildWithXLC,
     ClangUnixBuild,
     ClangUbsanLinuxBuild,
     ClangUbsanFunctionLinuxBuild,
@@ -1269,22 +1267,6 @@ def get_builders(settings, workers):
             UNSTABLE,
             NO_TIER,
             "malvex-nixos-x86_64",
-        ),
-
-        # AIX ppc64
-        cpb(
-            "PPC64 AIX",
-            AIXBuild,
-            UNSTABLE,
-            NO_TIER,
-            w("edelsohn-aix-ppc64"),
-        ),
-        cpb(
-            "PPC64 AIX XLC",
-            AIXBuildWithXLC,
-            UNSTABLE,
-            NO_TIER,
-            w("edelsohn-aix-ppc64"),
         ),
 
         # Solaris sparcv9
