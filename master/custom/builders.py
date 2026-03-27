@@ -1174,6 +1174,29 @@ def get_builders(settings, workers):
             w("cstratak-fedora-rawhide-s390x"),
         ),
 
+        # Linux x86-64 NixOS Unstable
+        cpb(
+            "AMD64 NixOS Unstable",
+            UnixBuild,
+            UNSTABLE,
+            NO_TIER,
+            "malvex-nixos-x86_64",
+        ),
+        cpb(
+            "AMD64 NixOS Unstable Refleaks",
+            UnixRefleakBuild,
+            UNSTABLE,
+            NO_TIER,
+            "malvex-nixos-x86_64",
+        ),
+        cpb(
+            "AMD64 NixOS Unstable Perf",
+            UnixPerfBuild,
+            UNSTABLE,
+            NO_TIER,
+            "malvex-nixos-x86_64",
+        ),
+
         # AIX ppc64
         cpb(
             "PPC64 AIX",
