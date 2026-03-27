@@ -205,6 +205,23 @@ def get_workers(settings):
             parallel_builders=2,
         ),
         cpw(
+            name="stan-aarch64-ubuntu",
+            tags=['linux', 'unix', 'ubuntu', 'arm', 'arm64', 'aarch64'],
+            parallel_tests=4,
+            # test_xpickle doesn't exist on these branches
+            not_branches=['3.12', '3.11', '3.10'],
+        ),
+        cpw(
+            name="stan-raspbian",
+            tags=['linux', 'unix', 'raspbian', 'debian', 'armv8',
+                  'aarch64', 'arm'],
+            parallel_tests=4,
+            # Tests fail with latin1 encoding on 3.12, probably earlier
+            not_branches=['3.12', '3.11', '3.10'],
+            # Problematic ISP causes issues connecting to testpython.net
+            exclude_test_resources=['urlfetch', 'network'],
+        ),
+        cpw(
             name="itamaro-macos-arm64-aws",
             tags=['macOS', 'unix', 'arm', 'arm64'],
             not_branches=['3.10', '3.11', '3.12'],
