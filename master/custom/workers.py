@@ -34,7 +34,8 @@ class CPythonWorker:
         parallel_tests=None,
         timeout_factor=1,
         exclude_test_resources=None,
-        downtime=None
+        downtime=None,
+        clone_mode='blobless',
     ):
         self.name = name
         self.tags = tags or set()
@@ -44,6 +45,7 @@ class CPythonWorker:
         self.timeout_factor = timeout_factor
         self.exclude_test_resources = exclude_test_resources or []
         self.downtime = downtime
+        self.clone_mode = clone_mode
 
         worker_settings = settings.workers[name]
         owner = name.split("-")[0]
@@ -306,6 +308,9 @@ def get_workers(settings):
             tags=['windows', 'win11', 'arm64'],
             parallel_tests=8,
             not_branches=['3.10', '3.11', '3.12'],
+            # Something seems to be going wrong
+            # with the blobless clones on this worker.
+            clone_mode='shallow',
         ),
         cpw(
             name="bcannon-wasi",
