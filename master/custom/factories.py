@@ -170,7 +170,6 @@ class UnixBuild(BaseBuild):
             self.addStep(UploadTestResults(branch, filename=filename))
         self.addStep(Clean(**oot_kwargs))
 
-
 class UnixPerfBuild(UnixBuild):
     buildersuffix = ".perfbuild"
     configureFlags = ["CFLAGS=-fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"]
@@ -434,8 +433,6 @@ class RHEL8Build(UnixBuild):
         "--with-ssl-default-suites=openssl",
         "--without-static-libpython",
         "--with-lto",
-        # Not all workers have dtrace installed
-        # "--with-dtrace",
         "--with-valgrind",
         "--with-system-libmpdec",
     ]
